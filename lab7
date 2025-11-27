@@ -1,0 +1,25 @@
+hive
+CREATE DATABASE IF NOT EXISTS college_db;
+USE college_db;
+CREATE TABLE students (
+ id INT,
+ name STRING,
+ dept STRING,
+ marks INT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+LOAD DATA LOCAL INPATH '/home/cloudera/Desktop/students.txt' INTO TABLE students;
+ALTER TABLE students ADD COLUMNS (email STRING);
+CREATE VIEW high_scorers AS SELECT name, marks FROM students WHERE marks > 80;
+SELECT * FROM high_scorers;
+DROP VIEW high_scorers;
+SELECT UPPER(name) FROM students;
+CREATE INDEX student_idx 
+ON TABLE students (dept) 
+AS 'COMPACT' 
+WITH DEFERRED REBUILD;
+ALTER INDEX student_idx ON students REBUILD;
+DROP TABLE students;
+DROP DATABASE college_db CASCADE;
