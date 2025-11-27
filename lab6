@@ -1,3 +1,5 @@
+gedit PigExample.pig
+
 students = LOAD '/user/root/pigdata/students.txt' USING 
 PigStorage(',') AS (id:int, name:chararray, dept:chararray, 
 marks:int); 
@@ -20,3 +22,13 @@ STORE high_scorers INTO '/user/root/pigoutput/high_scorers' USING PigStorage(','
 STORE projected INTO '/user/root/pigoutput/projected' USING PigStorage(','); 
 
 STORE average_marks INTO '/user/root/pigoutput/average_marks' USING PigStorage(',');
+
+hdfs dfs -mkdir /user/root/pigdata
+hdfs dfs -copyFromLocal ~/Desktop/students.txt /user/root/pigdata
+hdfs dfs -cat /user/root/pigdata/students.txt
+pig -x mapreduce PigExample.pig
+hdfs dfs -ls /user/root/pigoutput/sorted_students
+hdfs dfs -cat /user/root/pigoutput/sorted_students/part-r-00000
+hdfs dfs -cat /user/root/pigoutput/high_scorers/part-m-00000
+hdfs dfs -cat /user/root/pigoutput/projected/part-m-00000
+hdfs dfs -cat /user/root/pigoutput/average_marks/part-r-00000
